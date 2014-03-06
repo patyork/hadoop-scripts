@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Untitled Document</title>
+<style type="text/css">
+body {
+	font-family: Verdana, Geneva, sans-serif;
+}
+.codesnippet {
+	color: #090;
+}
+</style>
+</head>
+
+<body>
+<h2>Hadoop (for Apache)</h2>
+<p>Open-source framework for distributed batch processing of  (big) data. MapReduce is a model that implements this batch processing in a  parallel fashion across multiple servers (or virtualized servers in our case). Basically,  the data is split (Mapped) across servers, some work is done on each server,  and the results from each server are recombined (Reduced) in parallel and  output on the main server; it&rsquo;s a master-slave relationship.</p>
+<p>There are 3 main aspects of Hadoop as a basic framework for  working with data in parallel: Hadoop (the backend of everything), Hadoop  Distributed File System (HDFS, provides the ability to store large files as  blocks across multiple servers for high availability and fault tolerance), and  Hadoop MapReduce (again, parallel computing on a cluster).</p>
+<p>There are also many subprojects of Hadoop that handle  specialized tasks; Mahout for machine learning, Flume for data collection,  HBase for scalable databases, etc.</p>
+<h2>Hadoop Clusters</h2>
+ <p><em>A diagram is handy, see page 97 in the book.</em></p>
+<p>The Master Node contains a Name Node which keeps track of  and distributes information on where file data is kept within the cluster. It  also handles requests from a slave node that needs to modify data that may  exist on other nodes. The Backup node basically just contains a duplicate of  this data, as the Master node is a single point of failure (no bueno). The  Mater node also contains the Job Tracker which distributes the MapReduce tasks  to each slave node in a data-localizationally-optimized way.</p>
+<p>Each Slave node contains a Data Node which  stores data as a part of the HDFS (Hadoop Distributed File System). This  element responds to requests from the Name Node in the master, and also talks  to the Task Tracker… The Task Tracker in the slave node that responds to Map  and Reduce commands.</p>
+<h2>Creating a Single Node &quot;Cluster&quot;</h2>
+<p>I'll be the first to admit that I have yet to figure out how to make a multi-node cluster; the book is very out of date (uses Hadoop 1.0.4, where the latest stable release is 2.2.0).</p>
+<p>However, creating a series of single nodes is the first step to creating a cluster. All nodes require the same basic setup, and then the slaves are tweaked to be controlled by the Master and thus form a cluster.</p>
+<p>The process is pretty involved, so I've modified a script that will basically create a single node cluster for you more-or-less automagically. Here's the script: <a href="https://raw.github.com/patyork/hadoop-scripts/master/make-single-node.sh">Make A Single Node</a>.</p>
+<p>First download the script to the Debian box:<br />
+  <span class="codesnippet">cd ~<br />
+wget https://raw.github.com/patyork/hadoop-scripts/master/make-single-node.sh</span></p>
+<p>To use it, you need to uncomment some lines (those with double pound signs '##' are supposed to be comments) and run the command:<br />
+<span class="codesnippet">sudo sh make-single-node.sh</span></p>
+<p>..this will execute any uncommented lines, so be careful not to run lines twice (i.e. recomment lines you've run successfully).</p>
+<p>Read through the script as you go, and try to understand what is happening. You can find more information on what is happening from the book, <a href="http://codesfusion.blogspot.com/2013/10/setup-hadoop-2x-220-on-ubuntu.html">this website on creating a single node hadoop cluster</a>, <a href="http://cogsandlevers.blogspot.com/2014/01/hadoop-2-220-setup-on-debian.html">this other site on creating a single node hadoop cluster</a>, and <a href="https://beagle.whoi.edu/redmine/projects/ibt/wiki/Installing_Hadoop_on_Debian">this third site on creating a single node hadoop cluster</a>.</p>
+<h2>Creating a Cluster from Single Nodes</h2>
+<p>Finally, <a href="https://beagle.whoi.edu/redmine/projects/ibt/wiki/Installing_Hadoop_on_Debian_Cluster">there is a sibling article</a> for the third link above that expands the single node clusters into a Master-Slave, real, Hadoop Cluster.</p>
+</body>
+</html>
